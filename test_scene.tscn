@@ -1,12 +1,57 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://scenes/player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/TileMap.tscn" type="PackedScene" id=2]
+[ext_resource path="res://ProgresBar.tscn" type="PackedScene" id=3]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node2D
+
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	
+	
+	if Input.is_action_pressed(\"move_left\") :
+		var value = $Interface/Bar.get_value()
+		var new_value = value - 10
+		$Interface/Bar.animate_value(value, new_value)
+	
+	if Input.is_action_pressed(\"move_right\") :
+		var value = $Interface/Bar.get_value()
+		var new_value = value + 10
+		$Interface/Bar.animate_value(value, new_value)
+	
+"
 
 [node name="Node2D" type="Node2D"]
+script = SubResource( 1 )
 
 [node name="TileMap" parent="." instance=ExtResource( 2 )]
-tile_data = PoolIntArray( 655366, 0, 0, 655367, 0, 0, 655368, 0, 0, 655369, 0, 0, 655370, 0, 0, 655371, 0, 0, 655372, 0, 0, 655373, 0, 0, 655374, 0, 0, 655375, 0, 0, 655376, 0, 0 )
+tile_data = PoolIntArray( 655366, 0, 0, 655367, 0, 0, 655368, 0, 0, 655369, 0, 0, 655370, 0, 0, 655371, 0, 0, 655372, 0, 0, 655373, 0, 0, 655374, 0, 0, 655375, 0, 0, 655376, 0, 0, 655378, 0, 0, 655380, 0, 0 )
 
 [node name="player" parent="." instance=ExtResource( 1 )]
 position = Vector2( 184, 152 )
+
+[node name="Interface" type="Control" parent="."]
+margin_right = 512.0
+margin_bottom = 296.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Bar" parent="Interface" instance=ExtResource( 3 )]
+margin_left = 56.0
+margin_top = 40.0
+margin_right = 192.0
+margin_bottom = 88.0

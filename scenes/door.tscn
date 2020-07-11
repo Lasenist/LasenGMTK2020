@@ -8,9 +8,15 @@
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node2D
 
+signal request_power
+
 const OPEN_LENGTH = 2 #In seconds
+const POWERED_LENGTH = 1 #In seconds
 const RATE_OF_OPEN_PROGRESS_DROP = 30
+const POWER_USAGE = 1
+
 var open_cooldown = 0
+var power_usage_cooldown = 0
 
 var is_on = false
 var is_open = false
@@ -34,6 +40,15 @@ func _close():
 	is_open = false
 
 func _process(delta):
+	
+	if power_usage_cooldown >= 0:
+		power_usage_cooldown -= delta
+		
+	if power_usage_cooldown <= 0:
+		if is_on :
+			_turn_off()
+		emit_signal(\"request_power\", self, POWER_USAGE)
+	
 	if open_cooldown >= 0 :
 		open_cooldown -= delta
 	if open_cooldown <= 0 && is_open:
@@ -49,17 +64,24 @@ func _process(delta):
 	else :
 		$open_progress.visible = false
 		$open_progress.animate_to_value(0)
-	
 
+func _turn_off():
+	is_on = false
+	$AnimatedSprite.play(\"off\")
+
+func _turn_on():
+	is_on = true
+	$AnimatedSprite.play(\"on\")
 
 func toggle():
 	if is_on :
-		is_on = false
-		$AnimatedSprite.play(\"off\")
+		_turn_off()
 	else :
-		is_on = true
-		$AnimatedSprite.play(\"on\")
+		_turn_on()
 
+func give_power():
+	power_usage_cooldown = POWERED_LENGTH
+	_turn_on()
 
 func _on_open_area_body_entered(body):
 	if body is TileMap :

@@ -10,9 +10,7 @@ script/source = "extends Node2D
 const INTERACT_COOLDOWN_LENGTH = 0.5 # In Seconds
 var interact_cooldown = 0
 
-var is_on = false
-
-
+export var is_on = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -65,14 +63,14 @@ extents = Vector2( 8, 4 )
 
 [sub_resource type="SpriteFrames" id=4]
 animations = [ {
-"frames": [ ExtResource( 1 ) ],
-"loop": true,
-"name": "on",
-"speed": 5.0
-}, {
 "frames": [ ExtResource( 2 ) ],
 "loop": true,
 "name": "off",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 1 ) ],
+"loop": true,
+"name": "on",
 "speed": 5.0
 } ]
 

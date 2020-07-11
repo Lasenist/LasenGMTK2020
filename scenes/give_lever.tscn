@@ -7,15 +7,17 @@ script/source = "extends Node2D
 
 signal give_resource
 
-const RESOURCE_A_SECOND = 1
+export var RESOURCE_A_SECOND = 1
 
 onready var lever = $lever
 
-export var resource_name = \"Power\"
+
+export var resource_name = \"power\"
+export var is_on : bool
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	lever.is_on = self.is_on
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

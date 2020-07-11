@@ -1,9 +1,10 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://assets/door_off.png" type="Texture" id=1]
 [ext_resource path="res://assets/door_on.png" type="Texture" id=2]
 [ext_resource path="res://assets/door_open.png" type="Texture" id=3]
 [ext_resource path="res://progress_bar.tscn" type="PackedScene" id=4]
+[ext_resource path="res://assets/panel.png" type="Texture" id=5]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node2D
@@ -21,6 +22,8 @@ var power_usage_cooldown = 0
 var is_on = false
 var is_open = false
 var open_progress = 0
+
+onready var progress_bar = $NinePatchRect/open_progress
 
 func _open():
 	$AnimatedSprite.play(\"open\")
@@ -55,15 +58,15 @@ func _process(delta):
 		_close();
 	
 	if open_progress > 0 :
-		$open_progress.visible = true
+		$NinePatchRect.visible = true
 		open_progress -= RATE_OF_OPEN_PROGRESS_DROP * delta
-		$open_progress.animate_to_value(open_progress)
+		progress_bar.animate_to_value(open_progress)
 		
-		if $open_progress.get_value() >= $open_progress.get_max_value() :
+		if progress_bar.get_value() >= progress_bar.get_max_value() :
 			_open()
 	else :
-		$open_progress.visible = false
-		$open_progress.animate_to_value(0)
+		$NinePatchRect.visible = false
+		progress_bar.animate_to_value(0)
 
 func _turn_off():
 	is_on = false
@@ -174,10 +177,24 @@ script = SubResource( 5 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="interact_area"]
 shape = SubResource( 6 )
 
-[node name="open_progress" parent="." instance=ExtResource( 4 )]
-margin_left = -59.0
-margin_top = 8.0
-margin_right = 10.0
-margin_bottom = 17.0
+[node name="NinePatchRect" type="NinePatchRect" parent="."]
+margin_left = -12.0
+margin_top = 9.0
+margin_right = 11.0
+margin_bottom = 15.0
+texture = ExtResource( 5 )
+patch_margin_left = 2
+patch_margin_top = 2
+patch_margin_right = 2
+patch_margin_bottom = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="open_progress" parent="NinePatchRect" instance=ExtResource( 4 )]
+margin_left = -46.9775
+margin_top = -1.87868
+margin_right = 22.0225
+margin_bottom = 7.12132
 [connection signal="body_entered" from="open_area" to="." method="_on_open_area_body_entered"]
 [connection signal="interacted" from="interact_area" to="." method="_on_interact_area_interacted"]

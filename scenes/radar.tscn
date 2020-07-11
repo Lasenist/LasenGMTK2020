@@ -1,11 +1,10 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://assets/fonts/m5x7.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://assets/radar.png" type="Texture" id=2]
 [ext_resource path="res://assets/radar_on.png" type="Texture" id=3]
-[ext_resource path="res://scenes/lever.tscn" type="PackedScene" id=4]
 
-[sub_resource type="GDScript" id=4]
+[sub_resource type="GDScript" id=1]
 script/source = "extends Node2D
 
 signal take_resource
@@ -14,7 +13,7 @@ const TAKE_RESOURCE_A_SECOND = 3
 
 onready var lever = $lever
 
-export var take_resource_name = \"power\"
+export var take_resource_name = \"radar\"
 
 var is_powered_to_give_utility = false
 
@@ -38,9 +37,9 @@ func _off():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	if lever.is_on :
-		emit_signal(\"take_resource\", self, take_resource_name, TAKE_RESOURCE_A_SECOND * delta)
-		
+	
+	emit_signal(\"take_resource\", self, take_resource_name, TAKE_RESOURCE_A_SECOND * delta )
+	
 	if is_powered_to_give_utility :
 		_on()
 		is_powered_to_give_utility = false
@@ -48,7 +47,7 @@ func _process(delta):
 		_off()
 "
 
-[sub_resource type="SpriteFrames" id=1]
+[sub_resource type="SpriteFrames" id=2]
 animations = [ {
 "frames": [ ExtResource( 2 ) ],
 "loop": true,
@@ -61,7 +60,7 @@ animations = [ {
 "speed": 5.0
 } ]
 
-[sub_resource type="DynamicFont" id=2]
+[sub_resource type="DynamicFont" id=3]
 font_data = ExtResource( 1 )
 
 [node name="Node2D" type="Node2D" groups=[
@@ -69,11 +68,11 @@ font_data = ExtResource( 1 )
 "radar",
 "take_resource",
 ]]
-script = SubResource( 4 )
+script = SubResource( 1 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 position = Vector2( 0, -16 )
-frames = SubResource( 1 )
+frames = SubResource( 2 )
 animation = "off"
 
 [node name="Label" type="Label" parent="AnimatedSprite"]
@@ -86,12 +85,9 @@ margin_left = -22.0
 margin_top = -16.0
 margin_right = -10.0
 margin_bottom = -3.0
-custom_fonts/font = SubResource( 2 )
+custom_fonts/font = SubResource( 3 )
 text = "5"
 align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="lever" parent="." instance=ExtResource( 4 )]
-visible = false

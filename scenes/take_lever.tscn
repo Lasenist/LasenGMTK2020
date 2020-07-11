@@ -8,19 +8,20 @@ script/source = "extends Node2D
 signal take_resource
 signal give_resource
 
-const TAKE_RESOURCE_A_SECOND = 1
-const GIVE_RESOURCE_A_SECOND = 1
+export var TAKE_RESOURCE_A_SECOND = 1
+export var GIVE_RESOURCE_A_SECOND = 1
 
 onready var lever = $lever
 
 export var take_resource_name = \"Power\"
 export var give_resource_name = \"Power\"
+export var is_on : bool
 
 var is_powered_to_give_resource = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	lever.is_on = self.is_on
 
 func give_resource():
 	is_powered_to_give_resource = true

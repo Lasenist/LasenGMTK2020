@@ -106,7 +106,7 @@ radius = 4.42091
 height = 1.34693
 
 [sub_resource type="RayShape2D" id=5]
-length = 8.0
+length = 7.0
 
 [sub_resource type="CircleShape2D" id=3]
 radius = 16.0

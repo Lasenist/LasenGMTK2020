@@ -1,0 +1,21 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Timer
+
+signal give_resource
+
+export var give_resource_name : String
+export var RESOURCE_ON_TIMER = 5
+
+func _on_give_timer_timeout():
+	emit_signal(\"give_resource\", give_resource_name, RESOURCE_ON_TIMER)
+"
+
+[node name="give_timer" type="Timer" groups=[
+"give_resource",
+]]
+wait_time = 15.0
+autostart = true
+script = SubResource( 1 )
+[connection signal="timeout" from="." to="." method="_on_give_timer_timeout"]

@@ -1,0 +1,48 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Timer
+
+
+signal take_resource
+signal reduce_resource
+
+export var TAKE_RESOURCE_A_SECOND = 1
+export var REDUCE_RESOURCE_A_SECOND = 1
+
+export var take_resource_name = \"power\"
+export var reduce_resource_name = \"power\"
+export var is_on : bool
+
+var is_powered_to_reduce_resource = false
+var try_take_resouce = false
+
+func give_resource():
+	is_powered_to_reduce_resource = true
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	
+	if try_take_resouce :
+		var resource_used = TAKE_RESOURCE_A_SECOND * delta
+		emit_signal(\"take_resource\", self, take_resource_name, resource_used)
+		try_take_resouce = false
+	
+	if is_powered_to_reduce_resource :
+		emit_signal(\"reduce_resource\", reduce_resource_name, REDUCE_RESOURCE_A_SECOND)
+		is_powered_to_reduce_resource = false
+
+
+func _on_take_timer_timeout():
+	try_take_resouce = true
+"
+
+[node name="take_timer" type="Timer"]
+wait_time = 2.0
+autostart = true
+script = SubResource( 1 )
+TAKE_RESOURCE_A_SECOND = 5
+take_resource_name = "defences"
+reduce_resource_name = "enemies"
+is_on = true
+[connection signal="timeout" from="." to="." method="_on_take_timer_timeout"]

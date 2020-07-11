@@ -5,11 +5,13 @@
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node2D
 
-signal GivePower
+signal give_resource
 
-const POWER_A_SECOND = 1
+const RESOURCE_A_SECOND = 1
 
 onready var lever = $lever
+
+export var resource_name = \"Power\"
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -19,11 +21,11 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	if lever.is_on :
-		emit_signal(\"GivePower\", POWER_A_SECOND * delta)
+		emit_signal(\"give_resource\", resource_name, RESOURCE_A_SECOND * delta)
 "
 
-[node name="power_lever" type="Node2D" groups=[
-"powersource",
+[node name="give_lever" type="Node2D" groups=[
+"give_resource",
 ]]
 script = SubResource( 1 )
 

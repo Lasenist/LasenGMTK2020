@@ -8,12 +8,12 @@
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node2D
 
-signal request_power
+signal take_resource
 
 const OPEN_LENGTH = 2 #In seconds
 const POWERED_LENGTH = 1 #In seconds
 const RATE_OF_OPEN_PROGRESS_DROP = 30
-const POWER_USAGE = 1
+const POWER_USAGE = 5
 
 var open_cooldown = 0
 var power_usage_cooldown = 0
@@ -47,7 +47,7 @@ func _process(delta):
 	if power_usage_cooldown <= 0:
 		if is_on :
 			_turn_off()
-		emit_signal(\"request_power\", self, POWER_USAGE)
+		emit_signal(\"take_resource\", self, \"doorpower\", POWER_USAGE * delta)
 	
 	if open_cooldown >= 0 :
 		open_cooldown -= delta
@@ -79,7 +79,7 @@ func toggle():
 	else :
 		_turn_on()
 
-func give_power():
+func give_resource():
 	power_usage_cooldown = POWERED_LENGTH
 	_turn_on()
 
@@ -104,14 +104,14 @@ animations = [ {
 "name": "open",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 2 ) ],
-"loop": true,
-"name": "on",
-"speed": 5.0
-}, {
 "frames": [ ExtResource( 1 ) ],
 "loop": true,
 "name": "off",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 2 ) ],
+"loop": true,
+"name": "on",
 "speed": 5.0
 } ]
 
@@ -121,7 +121,7 @@ extents = Vector2( 1, 8 )
 [sub_resource type="CircleShape2D" id=4]
 radius = 13.985
 
-[sub_resource type="GDScript" id=6]
+[sub_resource type="GDScript" id=5]
 script/source = "extends Area2D
 
 
@@ -141,10 +141,12 @@ func interact():
 	emit_signal(\"interacted\")
 "
 
-[sub_resource type="RectangleShape2D" id=5]
+[sub_resource type="RectangleShape2D" id=6]
 extents = Vector2( 6, 8 )
 
-[node name="door" type="StaticBody2D"]
+[node name="door" type="StaticBody2D" groups=[
+"take_resource",
+]]
 collision_layer = 2
 script = SubResource( 1 )
 
@@ -167,16 +169,15 @@ shape = SubResource( 4 )
 ]]
 visible = false
 collision_layer = 2
-script = SubResource( 6 )
+script = SubResource( 5 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="interact_area"]
-shape = SubResource( 5 )
+shape = SubResource( 6 )
 
 [node name="open_progress" parent="." instance=ExtResource( 4 )]
-visible = false
-margin_left = -37.0
+margin_left = -59.0
 margin_top = 8.0
-margin_right = 13.0
+margin_right = 10.0
 margin_bottom = 17.0
 [connection signal="body_entered" from="open_area" to="." method="_on_open_area_body_entered"]
 [connection signal="interacted" from="interact_area" to="." method="_on_interact_area_interacted"]

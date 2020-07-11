@@ -82,14 +82,17 @@ __meta__ = {
 }
 
 [node name="PowerBar" parent="Interface" instance=ExtResource( 3 )]
-margin_right = 192.0
-margin_bottom = 48.0
+margin_left = 72.0
+margin_top = 40.0
+margin_right = 264.0
+margin_bottom = 88.0
 Name = "Power"
 
 [node name="RamBar" parent="Interface" instance=ExtResource( 3 )]
-margin_top = 24.0
-margin_right = 192.0
-margin_bottom = 72.0
+margin_left = 72.0
+margin_top = 64.0
+margin_right = 264.0
+margin_bottom = 112.0
 Name = "RAM"
 
 [node name="lever" parent="." instance=ExtResource( 4 )]

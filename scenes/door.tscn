@@ -1,0 +1,160 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://assets/door_off.png" type="Texture" id=1]
+[ext_resource path="res://assets/door_on.png" type="Texture" id=2]
+[ext_resource path="res://assets/door_open.png" type="Texture" id=3]
+[ext_resource path="res://progress_bar.tscn" type="PackedScene" id=4]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node2D
+
+const OPEN_LENGTH = 2 #In seconds
+const RATE_OF_OPEN_PROGRESS_DROP = 30
+var open_cooldown = 0
+
+var is_on = false
+var is_open = false
+var open_progress = 0
+
+func _open():
+	$AnimatedSprite.play(\"open\")
+	$CollisionShape2D.set_deferred(\"disabled\", true)
+	print(\"collision disabled\")
+	is_open = true
+	open_cooldown = OPEN_LENGTH
+	open_progress = 0
+
+func _close():
+	if is_on :
+		$AnimatedSprite.play(\"on\")
+	else :
+		$AnimatedSprite.play(\"off\")
+	$CollisionShape2D.set_deferred(\"disabled\", false)
+	print(\"collision enabled\")
+	is_open = false
+
+func _process(delta):
+	if open_cooldown >= 0 :
+		open_cooldown -= delta
+	if open_cooldown <= 0 && is_open:
+		_close();
+	
+	if open_progress > 0 :
+		$open_progress.visible = true
+		open_progress -= RATE_OF_OPEN_PROGRESS_DROP * delta
+		$open_progress.animate_to_value(open_progress)
+		
+		if $open_progress.get_value() >= $open_progress.get_max_value() :
+			_open()
+	else :
+		$open_progress.visible = false
+		$open_progress.animate_to_value(0)
+	
+
+
+func toggle():
+	if is_on :
+		is_on = false
+		$AnimatedSprite.play(\"off\")
+	else :
+		is_on = true
+		$AnimatedSprite.play(\"on\")
+
+
+func _on_open_area_body_entered(body):
+	if body is TileMap :
+		pass
+	else:
+		if is_on :
+			_open()
+
+func _on_interact_area_interacted():
+	if is_on && !is_open :
+		_open()
+	elif !is_open :
+		open_progress += 10
+"
+
+[sub_resource type="SpriteFrames" id=2]
+animations = [ {
+"frames": [ ExtResource( 3 ) ],
+"loop": true,
+"name": "open",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 2 ) ],
+"loop": true,
+"name": "on",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 1 ) ],
+"loop": true,
+"name": "off",
+"speed": 5.0
+} ]
+
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 1, 8 )
+
+[sub_resource type="CircleShape2D" id=4]
+radius = 13.985
+
+[sub_resource type="GDScript" id=6]
+script/source = "extends Area2D
+
+
+signal interacted
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+
+func interact():
+	emit_signal(\"interacted\")
+"
+
+[sub_resource type="RectangleShape2D" id=5]
+extents = Vector2( 6, 8 )
+
+[node name="door" type="StaticBody2D"]
+collision_layer = 2
+script = SubResource( 1 )
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+frames = SubResource( 2 )
+animation = "off"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 3 )
+
+[node name="open_area" type="Area2D" parent="."]
+visible = false
+collision_layer = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="open_area"]
+shape = SubResource( 4 )
+
+[node name="interact_area" type="Area2D" parent="." groups=[
+"interactable",
+]]
+visible = false
+collision_layer = 2
+script = SubResource( 6 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="interact_area"]
+shape = SubResource( 5 )
+
+[node name="open_progress" parent="." instance=ExtResource( 4 )]
+visible = false
+margin_left = -37.0
+margin_top = 8.0
+margin_right = 13.0
+margin_bottom = 17.0
+[connection signal="body_entered" from="open_area" to="." method="_on_open_area_body_entered"]
+[connection signal="interacted" from="interact_area" to="." method="_on_interact_area_interacted"]

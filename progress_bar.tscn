@@ -4,7 +4,7 @@
 [ext_resource path="res://assets/progress_bar_bg.png" type="Texture" id=2]
 [ext_resource path="res://assets/fonts/m5x7.ttf" type="DynamicFontData" id=3]
 
-[sub_resource type="GDScript" id=2]
+[sub_resource type="GDScript" id=1]
 script/source = "extends Control
 
 
@@ -12,43 +12,60 @@ script/source = "extends Control
 # var a = 2
 # var b = \"text\"
 
+export var Name : String setget set_name
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	$Label.text = Name
 
 func set_name(name):
-	$Label.Text = name
+	Name = name
 
 func get_value():
 	return $TextureProgress.value
 
+func get_max_value():
+	return $TextureProgress.max_value
+
 func animate_value(start, end):
 	$Tween.interpolate_property($TextureProgress, \"value\", start, end, 0.5, Tween.TRANS_ELASTIC, Tween.EASE_OUT)
 	$Tween.start()
+	
+func animate_to_value(end):
+	animate_value($TextureProgress.value, end)
 "
 
-[sub_resource type="DynamicFont" id=3]
+[sub_resource type="DynamicFont" id=2]
 extra_spacing_top = 1
 font_data = ExtResource( 3 )
 
 [node name="Control" type="Control"]
-margin_right = 128.0
+self_modulate = Color( 0, 0, 0, 1 )
+margin_right = 120.0
 margin_bottom = 16.0
-script = SubResource( 2 )
+script = SubResource( 1 )
+
+[node name="Tween" type="Tween" parent="."]
+
+[node name="Label" type="Label" parent="."]
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_top = -7.0
+margin_right = -96.0
+margin_bottom = 7.0
+custom_fonts/font = SubResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Tween" type="Tween" parent="."]
-
 [node name="TextureProgress" type="TextureProgress" parent="."]
-anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-margin_left = -112.0
-margin_top = -8.0
-margin_bottom = 8.0
+margin_left = 24.0
+margin_top = -2.0
+margin_bottom = 2.0
 value = 75.0
 texture_over = ExtResource( 2 )
 texture_progress = ExtResource( 1 )
@@ -57,19 +74,6 @@ stretch_margin_left = 2
 stretch_margin_top = 2
 stretch_margin_right = 2
 stretch_margin_bottom = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label" type="Label" parent="."]
-anchor_top = 0.5
-anchor_bottom = 0.5
-margin_left = 8.0
-margin_top = -8.0
-margin_right = 16.0
-margin_bottom = 8.0
-custom_fonts/font = SubResource( 3 )
-text = "?"
 __meta__ = {
 "_edit_use_anchors_": false
 }

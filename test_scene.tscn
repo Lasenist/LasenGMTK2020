@@ -1,8 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://scenes/player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/TileMap.tscn" type="PackedScene" id=2]
-[ext_resource path="res://ProgresBar.tscn" type="PackedScene" id=3]
+[ext_resource path="res://progress_bar.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scenes/lever.tscn" type="PackedScene" id=4]
+[ext_resource path="res://scenes/door.tscn" type="PackedScene" id=5]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node2D
@@ -15,23 +17,51 @@ script/source = "extends Node2D
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	$door.toggle()
 	pass # Replace with function body.
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	pass
 	
+#	if Input.is_action_pressed(\"move_left\") :
+#		var value = $Interface/Bar.get_value()
+#		var new_value = value - 10
+#		$Interface/Bar.animate_value(value, new_value)
+#
+#	if Input.is_action_pressed(\"move_right\") :
+#		var value = $Interface/Bar2.get_value()
+#		var new_value = value + 10
+#		$Interface/Bar.animate_value(value, new_value)
 	
-	if Input.is_action_pressed(\"move_left\") :
-		var value = $Interface/Bar.get_value()
-		var new_value = value - 10
-		$Interface/Bar.animate_value(value, new_value)
-	
-	if Input.is_action_pressed(\"move_right\") :
-		var value = $Interface/Bar.get_value()
-		var new_value = value + 10
-		$Interface/Bar.animate_value(value, new_value)
-	
+"
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends Control
+
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+func alter_power(value):
+	var current_value = $PowerBar.value
+	$PowerBar.animate_to_value(current_value + value)
+
+func alter_ram_usage(value):
+	var current_value = $RamBar.value
+	$RamBar.animate_to_value(current_value + value)
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
 "
 
 [node name="Node2D" type="Node2D"]
@@ -46,12 +76,27 @@ position = Vector2( 184, 152 )
 [node name="Interface" type="Control" parent="."]
 margin_right = 512.0
 margin_bottom = 296.0
+script = SubResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Bar" parent="Interface" instance=ExtResource( 3 )]
-margin_left = 56.0
-margin_top = 40.0
+[node name="PowerBar" parent="Interface" instance=ExtResource( 3 )]
 margin_right = 192.0
-margin_bottom = 88.0
+margin_bottom = 48.0
+Name = "Power"
+
+[node name="RamBar" parent="Interface" instance=ExtResource( 3 )]
+margin_top = 24.0
+margin_right = 192.0
+margin_bottom = 72.0
+Name = "RAM"
+
+[node name="lever" parent="." instance=ExtResource( 4 )]
+position = Vector2( 120, 160 )
+
+[node name="lever2" parent="." instance=ExtResource( 4 )]
+position = Vector2( 240, 160 )
+
+[node name="door" parent="." instance=ExtResource( 5 )]
+position = Vector2( 160, 152 )

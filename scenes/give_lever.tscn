@@ -11,19 +11,21 @@ export var RESOURCE_A_SECOND = 1
 
 onready var lever = $lever
 
+export var give_resource_name = \"power\"
+export var is_on : bool setget set_is_on
 
-export var resource_name = \"power\"
-export var is_on : bool
-
-# Called when the node enters the scene tree for the first time.
 func _ready():
-	lever.is_on = self.is_on
+	lever.is_on = is_on
 
+func set_is_on(value) :
+	is_on = value
+	if lever :
+		lever.is_on = value
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	if lever.is_on :
-		emit_signal(\"give_resource\", resource_name, RESOURCE_A_SECOND * delta)
+		emit_signal(\"give_resource\", give_resource_name, RESOURCE_A_SECOND * delta)
 "
 
 [node name="give_lever" type="Node2D" groups=[

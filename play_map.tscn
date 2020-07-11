@@ -76,12 +76,20 @@ func _on_resource_taken(requester, name, amount):
 	var was_successful = _alter_resource(name, -amount)
 	if was_successful :
 		requester.give_resource()
+	elif name == \"power\" :
+		_short_circuit()
 
 func _on_enemy_timer_timeout():
 	var enemies = randi()%10+1
 	for object in $objects.get_children():
 		if object.is_in_group(\"radar\") :
 			object.set_display(enemies)
+
+func _short_circuit():
+	for givenodes in get_tree().get_nodes_in_group(\"give_resource\") :
+		if givenodes.give_resource_name == \"power\" && givenodes.is_on:
+			givenodes.is_on = false
+			print(\"short circuited\")
 "
 
 [node name="Node2D" type="Node2D"]

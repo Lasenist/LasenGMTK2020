@@ -29,7 +29,8 @@ func give_resource():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	if lever.is_on :
-		emit_signal(\"take_resource\", self, take_resource_name, TAKE_RESOURCE_A_SECOND * delta)
+		var resource_used = TAKE_RESOURCE_A_SECOND * delta
+		emit_signal(\"take_resource\", self, take_resource_name, resource_used)
 		
 	if is_powered_to_give_resource :
 		emit_signal(\"give_resource\", give_resource_name, GIVE_RESOURCE_A_SECOND * delta)

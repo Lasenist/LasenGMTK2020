@@ -10,23 +10,32 @@ script/source = "extends Node2D
 const INTERACT_COOLDOWN_LENGTH = 0.5 # In Seconds
 var interact_cooldown = 0
 
-export var is_on = false
+export var is_on = false setget set_is_on
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
+func set_is_on(value):
+	is_on = value
+	if is_on :
+		_on()
+	else:
+		_off()
 
 func _process(delta):
 	if interact_cooldown > 0 :
 		interact_cooldown -= delta
 
+func _on():
+	is_on = true
+	$AnimatedSprite.play(\"on\")
+	
+func _off():
+	is_on = false
+	$AnimatedSprite.play(\"off\")#
+
 func toggle():
 	if is_on :
-		is_on = false
-		$AnimatedSprite.play(\"off\")
+		_off()
 	else :
-		is_on = true
-		$AnimatedSprite.play(\"on\")
+		_on()
 
 func _on_Area2D_interacted():
 	if interact_cooldown <= 0 :

@@ -22,14 +22,14 @@ func _on_enemy_ramp_up_timer_timeout() :
 [node name="enemies_arriving_timer" type="Timer" groups=[
 "give_resource",
 ]]
-wait_time = 30.0
+wait_time = 15.0
 autostart = true
 script = SubResource( 1 )
 give_resource_name = "enemies"
 RESOURCE_ON_TIMER = 0
 
 [node name="enemy_ramp_up_timer" type="Timer" parent="."]
-wait_time = 90.0
+wait_time = 45.0
 autostart = true
 [connection signal="timeout" from="." to="." method="_on_give_timer_timeout"]
 [connection signal="timeout" from="enemy_ramp_up_timer" to="." method="_on_enemy_ramp_up_timer_timeout"]

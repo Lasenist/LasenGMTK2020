@@ -1,0 +1,24 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://AI.gd" type="Script" id=1]
+
+[node name="AITaskSystem" type="Node" groups=[
+"task_system",
+]]
+script = ExtResource( 1 )
+
+[node name="task_give_timer" type="Timer" parent="."]
+wait_time = 30.0
+autostart = true
+
+[node name="current_task_timer" type="Timer" parent="."]
+one_shot = true
+
+[node name="player_moving_timer" type="Timer" parent="."]
+one_shot = true
+__meta__ = {
+"_editor_description_": "How long the AI waits until it classes the player as stopped"
+}
+[connection signal="timeout" from="task_give_timer" to="." method="_on_task_give_timer_timeout"]
+[connection signal="timeout" from="current_task_timer" to="." method="_on_current_task_timer_timeout"]
+[connection signal="timeout" from="player_moving_timer" to="." method="_on_player_moving_timer_timeout"]

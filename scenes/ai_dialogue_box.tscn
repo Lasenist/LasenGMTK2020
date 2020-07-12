@@ -1,0 +1,131 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://scenes/AI.tscn" type="PackedScene" id=1]
+[ext_resource path="res://assets/panel.png" type="Texture" id=2]
+[ext_resource path="res://assets/fonts/m5x7.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://scenes/simple_progress_bar.tscn" type="PackedScene" id=4]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Control
+
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+onready var text = $NinePatchRect2/Label
+
+
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+"
+
+[sub_resource type="DynamicFont" id=2]
+font_data = ExtResource( 3 )
+
+[sub_resource type="GDScript" id=3]
+script/source = "extends Node2D
+
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+signal seen_player
+
+
+var player
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+func _get_player() :
+	if !player :
+		for node in get_tree().get_nodes_in_group(\"player\") :
+			player = node
+	return player
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	var player = _get_player()
+	look_at(player.position)
+	
+	for body in $Area2D.get_overlapping_bodies() :
+		if body.is_in_group(\"player\") :
+			emit_signal(\"seen_player\")
+"
+
+[node name="dialogue_box" type="Control"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -114.0
+margin_top = -55.0
+margin_right = 99.0
+margin_bottom = -20.0
+script = SubResource( 1 )
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="NinePatchRect2" type="NinePatchRect" parent="."]
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -233.0
+margin_right = 41.0
+margin_bottom = 21.0
+texture = ExtResource( 2 )
+patch_margin_left = 2
+patch_margin_top = 2
+patch_margin_right = 2
+patch_margin_bottom = 2
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="NinePatchRect2"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 49.0
+margin_top = 4.0
+margin_right = -4.0
+margin_bottom = -4.0
+custom_fonts/font = SubResource( 2 )
+text = "So... I think we need to test the doors....
+6 times should do it?"
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Control" type="Control" parent="."]
+anchor_top = 0.5
+anchor_bottom = 0.5
+margin_top = 12.0
+margin_right = 19.0
+margin_bottom = 22.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AI" parent="Control" instance=ExtResource( 1 )]
+scale = Vector2( 2, 2 )
+script = SubResource( 3 )
+
+[node name="progress_bar" parent="." instance=ExtResource( 4 )]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -80.5
+margin_right = 135.5
+margin_bottom = 24.0

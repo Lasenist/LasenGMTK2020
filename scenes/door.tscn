@@ -10,6 +10,7 @@
 script/source = "extends Node2D
 
 signal take_resource
+signal opened
 
 const OPEN_LENGTH = 2 #In seconds
 const POWERED_LENGTH = 1 #In seconds
@@ -34,6 +35,7 @@ func _open():
 	is_open = true
 	open_cooldown = OPEN_LENGTH
 	open_progress = 0
+	emit_signal(\"opened\")
 
 func _close():
 	if is_on :

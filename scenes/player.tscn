@@ -1,8 +1,9 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://assets/astro.png" type="Texture" id=1]
-[ext_resource path="res://assets/fonts/m5x7.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://scenes/resource_list.tscn" type="PackedScene" id=2]
 [ext_resource path="res://assets/panel.png" type="Texture" id=3]
+[ext_resource path="res://scenes/game_over_Screen.tscn" type="PackedScene" id=4]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends KinematicBody2D
@@ -111,10 +112,29 @@ length = 7.0
 [sub_resource type="CircleShape2D" id=3]
 radius = 16.0
 
-[sub_resource type="DynamicFont" id=4]
-extra_spacing_bottom = -5
-extra_spacing_space = -1
-font_data = ExtResource( 2 )
+[sub_resource type="GDScript" id=7]
+script/source = "extends NinePatchRect
+
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+
+	if Input.is_action_pressed(\"show_resource\") :
+		visible = true
+	else :
+		visible = false
+
+"
 
 [node name="player" type="KinematicBody2D"]
 collision_mask = 2
@@ -145,28 +165,35 @@ smoothing_enabled = true
 
 [node name="NinePatchRect" type="NinePatchRect" parent="CanvasLayer"]
 visible = false
-margin_left = -128.0
-margin_top = 64.0
-margin_right = 128.0
-margin_bottom = 96.0
+margin_left = 143.379
+margin_top = 169.726
+margin_right = 390.379
+margin_bottom = 295.726
 texture = ExtResource( 3 )
 region_rect = Rect2( -0.033638, -0.0202694, 16.0336, 16.0203 )
 patch_margin_left = 2
 patch_margin_top = 2
 patch_margin_right = 2
 patch_margin_bottom = 2
+script = SubResource( 7 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="CanvasLayer/NinePatchRect"]
-margin_left = 7.0
-margin_top = 3.0
-margin_right = 256.0
-margin_bottom = 14.0
-custom_fonts/font = SubResource( 4 )
-text = "Could you stand still for a second..."
-autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="VBoxContainer" parent="CanvasLayer/NinePatchRect" instance=ExtResource( 2 )]
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_left = 15.0
+margin_top = -45.0
+margin_right = -15.0
+margin_bottom = 45.0
+
+[node name="game_over_screen" parent="CanvasLayer" instance=ExtResource( 4 )]
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.0
+margin_left = -100.0
+margin_top = 10.0
+margin_right = 100.0
+margin_bottom = 49.0

@@ -31,7 +31,6 @@ func _ready():
 func _open():
 	$AnimatedSprite.play(\"open\")
 	$CollisionShape2D.set_deferred(\"disabled\", true)
-	print(\"collision disabled\")
 	is_open = true
 	open_cooldown = OPEN_LENGTH
 	open_progress = 0
@@ -42,7 +41,6 @@ func _close():
 	else :
 		$AnimatedSprite.play(\"off\")
 	$CollisionShape2D.set_deferred(\"disabled\", false)
-	print(\"collision enabled\")
 	is_open = false
 
 func _process(delta):
@@ -195,9 +193,9 @@ __meta__ = {
 }
 
 [node name="open_progress" parent="NinePatchRect" instance=ExtResource( 4 )]
-margin_left = -46.9775
-margin_top = -1.87868
-margin_right = 22.0225
-margin_bottom = 7.12132
+margin_left = -47.0
+margin_top = -3.0
+margin_right = 31.0
+margin_bottom = 9.0
 [connection signal="body_entered" from="open_area" to="." method="_on_open_area_body_entered"]
 [connection signal="interacted" from="interact_area" to="." method="_on_interact_area_interacted"]

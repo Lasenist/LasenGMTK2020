@@ -1,0 +1,88 @@
+[gd_scene load_steps=3 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Timer
+
+
+signal take_resource
+signal reduce_resource
+
+export var TAKE_RESOURCE_A_SECOND = 1
+export var REDUCE_RESOURCE_A_SECOND = 1
+
+export var take_resource_name = \"defence\"
+export var reduce_resource_name = \"enemies\"
+export var is_on : bool
+
+var is_powered_to_reduce_resource = false
+var try_take_resouce = false
+
+var enemy_count
+
+func give_resource():
+	is_powered_to_reduce_resource = true
+
+func set_display(value):
+	enemy_count = value
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	
+	if try_take_resouce :
+		var resource_used = TAKE_RESOURCE_A_SECOND
+		emit_signal(\"take_resource\", self, take_resource_name, resource_used)
+		try_take_resouce = false
+	
+	if is_powered_to_reduce_resource :
+		var resource_amount_to_take = REDUCE_RESOURCE_A_SECOND
+		var radar_value = $radar_value.value
+		if radar_value > 0 :
+			resource_amount_to_take = REDUCE_RESOURCE_A_SECOND * 2
+			
+		emit_signal(\"reduce_resource\", reduce_resource_name, resource_amount_to_take)
+		is_powered_to_reduce_resource = false
+
+
+func _on_take_timer_timeout():
+	if enemy_count > 0 :
+		try_take_resouce = true
+"
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends Node
+
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+
+
+var value = 0
+
+
+func set_display(value) :
+	self.value = value
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+"
+
+[node name="defence_guns_shooting" type="Timer" groups=[
+"enemiesdisplay",
+"reduce_resource",
+"take_resource",
+]]
+wait_time = 2.0
+autostart = true
+script = SubResource( 1 )
+TAKE_RESOURCE_A_SECOND = 5
+take_resource_name = "defences"
+is_on = true
+
+[node name="radar_value" type="Node" parent="." groups=[
+"radardisplay",
+]]
+script = SubResource( 2 )
+[connection signal="timeout" from="." to="." method="_on_take_timer_timeout"]

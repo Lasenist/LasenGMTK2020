@@ -4,7 +4,7 @@
 [ext_resource path="res://assets/radar.png" type="Texture" id=2]
 [ext_resource path="res://assets/radar_on.png" type="Texture" id=3]
 
-[sub_resource type="GDScript" id=1]
+[sub_resource type="GDScript" id=4]
 script/source = "extends Node2D
 
 signal take_resource
@@ -47,7 +47,7 @@ func _process(delta):
 		_off()
 "
 
-[sub_resource type="SpriteFrames" id=2]
+[sub_resource type="SpriteFrames" id=5]
 animations = [ {
 "frames": [ ExtResource( 2 ) ],
 "loop": true,
@@ -67,11 +67,11 @@ font_data = ExtResource( 1 )
 "enemiesdisplay",
 "take_resource",
 ]]
-script = SubResource( 1 )
+script = SubResource( 4 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 position = Vector2( 0, -16 )
-frames = SubResource( 2 )
+frames = SubResource( 5 )
 animation = "off"
 
 [node name="Label" type="Label" parent="AnimatedSprite"]

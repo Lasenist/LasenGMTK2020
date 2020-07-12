@@ -8,8 +8,8 @@
 [ext_resource path="res://scenes/take_lever.tscn" type="PackedScene" id=6]
 [ext_resource path="res://scenes/radar.tscn" type="PackedScene" id=7]
 [ext_resource path="res://scenes/display_panel.tscn" type="PackedScene" id=8]
-[ext_resource path="res://scenes/give_timer.tscn" type="PackedScene" id=9]
-[ext_resource path="res://scenes/take_timer.tscn" type="PackedScene" id=10]
+[ext_resource path="res://scenes/enemies_arriving_timer.tscn" type="PackedScene" id=9]
+[ext_resource path="res://scenes/defence_guns_shooting.tscn" type="PackedScene" id=10]
 [ext_resource path="res://scenes/enemies_attacking_timer.tscn" type="PackedScene" id=11]
 [ext_resource path="res://scenes/resource_list.tscn" type="PackedScene" id=12]
 
@@ -23,12 +23,11 @@ script/source = "extends Node2D
 
 var resource_names = [ \"power\", \"oxygen\", \"hull\", \"doorpower\", \"warpcore\", \"shields\", \"radar\", \"enemies\", \"crew\", \"defences\" ]
 var resouce_starting_values = { \"power\": 100, \"oxygen\": 100, \"hull\": 100, \"doorpower\" : 50, \"shields\": 50, \"radar\": 50, \"crew\": 1500,
-								\"defences\": 50}
+								\"defences\": 50, \"enemies\": 3}
 var resource_values = {}
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	
 	for resource in resource_names :
 		if resouce_starting_values.has(resource) :
 			resource_values[resource] = resouce_starting_values[resource]
@@ -47,6 +46,10 @@ func _ready():
 	for resource in resource_names :
 		_update_resouce_ui(resource)
 
+func _process(delta):
+	if Input.is_action_pressed(\"reset\") :
+		get_tree().reload_current_scene()
+
 func _set_resource(name, amount):
 	resource_values[name] = amount
 		
@@ -64,6 +67,10 @@ func _alter_resource(name, amount):
 			_set_resource(name, resource_amount)
 			_update_resouce_ui(name)
 			return true
+		elif name == \"enemies\" || name == \"shields\" || name == \"hull\" :
+			resource_amount = 0
+			_set_resource(name, resource_amount)
+			_update_resouce_ui(name)
 		else:
 			return false
 	else :
@@ -148,7 +155,11 @@ margin_right = 800.0
 margin_bottom = 504.0
 Name = "Door"
 
-[node name="VBoxContainer" parent="Control" instance=ExtResource( 12 )]
+[node name="resource_list" parent="Control" instance=ExtResource( 12 )]
+margin_left = 344.0
+margin_top = 376.0
+margin_right = 456.0
+margin_bottom = 448.0
 
 [node name="PowerBar2" parent="Control" groups=[
 "powerbar",
@@ -337,6 +348,7 @@ position = Vector2( 600, 744 )
 rotation = -1.5708
 
 [node name="radar" parent="objects" instance=ExtResource( 7 )]
+visible = false
 position = Vector2( 520, 496 )
 z_index = -1
 
@@ -431,20 +443,13 @@ TAKE_RESOURCE_A_SECOND = 4
 take_resource_name = "power"
 give_resource_name = "hull"
 
-[node name="enemies_arriving" parent="." instance=ExtResource( 9 )]
-wait_time = 3.0
-give_resource_name = "enemies"
-RESOURCE_ON_TIMER = 1
-
-[node name="guns_destroying_enemies" parent="." groups=[
-"reduce_resource",
-"take_resource",
-] instance=ExtResource( 10 )]
-wait_time = 5.0
-
 [node name="enemies_attacking_timer" parent="." instance=ExtResource( 11 )]
 autostart = true
 
 [node name="update_display_timer" type="Timer" parent="."]
 autostart = true
+
+[node name="enemies_arriving_timer" parent="." instance=ExtResource( 9 )]
+
+[node name="defence_guns_shooting" parent="." instance=ExtResource( 10 )]
 [connection signal="timeout" from="update_display_timer" to="." method="_on_update_display_timer_timeout"]

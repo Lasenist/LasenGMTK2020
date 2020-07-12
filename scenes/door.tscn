@@ -48,9 +48,7 @@ func _process(delta):
 	if power_usage_cooldown >= 0:
 		power_usage_cooldown -= delta
 		
-	if power_usage_cooldown <= 0:
-		if is_on :
-			_turn_off()
+	if power_usage_cooldown <= 0 && is_open && is_on :
 		emit_signal(\"take_resource\", self, \"doorpower\", POWER_USAGE * delta)
 	
 	if open_cooldown >= 0 :
@@ -75,7 +73,8 @@ func _turn_off():
 
 func _turn_on():
 	is_on = true
-	$AnimatedSprite.play(\"on\")
+	if !is_open :
+		$AnimatedSprite.play(\"on\")
 
 func toggle():
 	if is_on :
@@ -85,7 +84,12 @@ func toggle():
 
 func give_resource():
 	power_usage_cooldown = POWERED_LENGTH
-	_turn_on()
+
+func set_display(value):
+	if value > 0 :
+		_turn_on()
+	else :
+		_turn_off()
 
 func _on_open_area_body_entered(body):
 	if body is TileMap :
@@ -149,6 +153,7 @@ func interact():
 extents = Vector2( 6, 8 )
 
 [node name="door" type="StaticBody2D" groups=[
+"doorpowerdisplay",
 "take_resource",
 ]]
 collision_layer = 2

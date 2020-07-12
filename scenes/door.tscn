@@ -25,6 +25,9 @@ var open_progress = 0
 
 onready var progress_bar = $NinePatchRect/open_progress
 
+func _ready():
+	$NinePatchRect/open_progress/change_sign.visible = false
+
 func _open():
 	$AnimatedSprite.play(\"open\")
 	$CollisionShape2D.set_deferred(\"disabled\", true)

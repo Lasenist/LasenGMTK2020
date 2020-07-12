@@ -1,0 +1,49 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Timer
+
+
+signal take_resource
+signal reduce_resource
+
+var number_of_enemies
+var was_attack_blocked_by_shields = true
+
+var ready_to_attack = false
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+func set_display(value) :
+	number_of_enemies = value
+
+func give_resource():
+	was_attack_blocked_by_shields = true
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	
+	if ready_to_attack && number_of_enemies > 0:
+		emit_signal(\"take_resource\", self, \"shields\", number_of_enemies * delta)
+		
+		if !was_attack_blocked_by_shields :
+			emit_signal(\"reduce_resource\", \"hull\", number_of_enemies * delta)
+			was_attack_blocked_by_shields = false
+		else: # reset for next attack
+			was_attack_blocked_by_shields = false
+			
+
+
+func _on_enemies_attacking_timer_timeout():
+	ready_to_attack = true
+"
+
+[node name="enemies_attacking_timer" type="Timer" groups=[
+"enemiesdisplay",
+"reduce_resource",
+"take_resource",
+]]
+script = SubResource( 1 )
+[connection signal="timeout" from="." to="." method="_on_enemies_attacking_timer_timeout"]

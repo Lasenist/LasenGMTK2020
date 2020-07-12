@@ -7,7 +7,7 @@ script/source = "extends Node2D
 
 signal give_resource
 
-export var RESOURCE_A_SECOND = 1
+export var RESOURCE_A_SECOND = 1.0
 
 onready var lever = $lever
 

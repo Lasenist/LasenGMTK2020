@@ -9,7 +9,7 @@ script/source = "extends Node2D
 
 signal take_resource
 
-const TAKE_RESOURCE_A_SECOND = 3
+const TAKE_RESOURCE_A_SECOND = 1
 
 onready var lever = $lever
 

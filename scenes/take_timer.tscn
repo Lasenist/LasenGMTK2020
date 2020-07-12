@@ -24,7 +24,7 @@ func give_resource():
 func _process(delta):
 	
 	if try_take_resouce :
-		var resource_used = TAKE_RESOURCE_A_SECOND * delta
+		var resource_used = TAKE_RESOURCE_A_SECOND
 		emit_signal(\"take_resource\", self, take_resource_name, resource_used)
 		try_take_resouce = false
 	

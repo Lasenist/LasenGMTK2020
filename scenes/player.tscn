@@ -113,6 +113,11 @@ func _on_AITaskSystem_task_failed():
 
 func _on_AITaskSystem_task_succeeded():
 	dialogue_box.visible = false
+
+func _on_Node2D_ai_said(value):
+	dialogue_box.visible = true
+	dialogue_box.set_text(value)
+	dialogue_box.set_timer(3)
 "
 
 [sub_resource type="CapsuleShape2D" id=2]

@@ -24,9 +24,13 @@ func set_text(value):
 	
 func set_timer(value):
 	total_time = value
+	$progress_bar.set_max(total_time)
 	current_time = 0
 	$progress_timer.start()
 
+func _process(delta):
+	if current_time >= total_time:
+		visible = false
 
 func _on_progress_timer_timeout():
 	current_time += $progress_timer.wait_time

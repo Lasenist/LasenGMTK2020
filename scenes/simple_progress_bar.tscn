@@ -17,9 +17,15 @@ func _ready():
 	pass # Replace with function body.
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
+func get_value():
+	return $TextureProgress.value
+
+func get_max_value():
+	return $TextureProgress.max_value
+
+func set_max(value):
+	$TextureProgress.max_value = value
+
 func animate_value(start, end):
 	$Tween.interpolate_property($TextureProgress, \"value\", start, end, 0.5, Tween.TRANS_ELASTIC, Tween.EASE_OUT)
 	$Tween.start()
@@ -42,7 +48,6 @@ anchor_right = 1.0
 anchor_bottom = 0.5
 margin_top = -2.0
 margin_bottom = 2.0
-value = 75.0
 texture_over = ExtResource( 2 )
 texture_progress = ExtResource( 1 )
 nine_patch_stretch = true

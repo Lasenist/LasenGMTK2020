@@ -61,7 +61,6 @@ func _get_task_description(stat_name, count):
 # We need to give a task
 func _on_task_give_timer_timeout():
 	_generate_new_task()
-	print("Time for a new task!")
 
 # the current task has ended
 func _on_current_task_timer_timeout():

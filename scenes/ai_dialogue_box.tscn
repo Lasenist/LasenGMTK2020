@@ -13,14 +13,24 @@ script/source = "extends Control
 # var a = 2
 # var b = \"text\"
 
-onready var text = $NinePatchRect2/Label
+onready var label = $NinePatchRect2/Label
+
+var total_time = 0
+var current_time = 0
 
 
+func set_text(value):
+	label.text = value
+	
+func set_timer(value):
+	total_time = value
+	current_time = 0
+	$progress_timer.start()
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
+func _on_progress_timer_timeout():
+	current_time += $progress_timer.wait_time
+	$progress_bar.animate_to_value(current_time)
 "
 
 [sub_resource type="DynamicFont" id=2]
@@ -100,8 +110,6 @@ margin_top = 4.0
 margin_right = -4.0
 margin_bottom = -4.0
 custom_fonts/font = SubResource( 2 )
-text = "So... I think we need to test the doors....
-6 times should do it?"
 autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
@@ -129,3 +137,6 @@ anchor_bottom = 1.0
 margin_left = -80.5
 margin_right = 135.5
 margin_bottom = 24.0
+
+[node name="progress_timer" type="Timer" parent="."]
+[connection signal="timeout" from="progress_timer" to="." method="_on_progress_timer_timeout"]

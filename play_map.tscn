@@ -24,8 +24,7 @@ script/source = "extends Node2D
 # var b = \"text\"
 
 var resource_names = [ \"power\", \"oxygen\", \"hull\", \"doorpower\", \"warpcore\", \"shields\", \"radar\", \"enemies\", \"crew\", \"defences\" ]
-var resouce_starting_values = { \"power\": 100, \"oxygen\": 100, \"hull\": 100, \"doorpower\" : 50, \"shields\": 50, \"radar\": 50, \"crew\": 1500,
-								\"defences\": 50, \"enemies\": 3}
+var resouce_starting_values = { \"power\": 100, \"oxygen\": 100, \"hull\": 100, \"doorpower\" : 50, \"shields\": 50, \"radar\": 50, \"defences\": 50, \"enemies\": 0}
 var resource_values = {}
 
 # Called when the node enters the scene tree for the first time.
@@ -481,3 +480,6 @@ should_look = true
 
 [node name="AITaskSystem" parent="." instance=ExtResource( 14 )]
 [connection signal="timeout" from="update_display_timer" to="." method="_on_update_display_timer_timeout"]
+[connection signal="new_task_given" from="AITaskSystem" to="player" method="_on_AITaskSystem_new_task_given"]
+[connection signal="task_failed" from="AITaskSystem" to="player" method="_on_AITaskSystem_task_failed"]
+[connection signal="task_succeeded" from="AITaskSystem" to="player" method="_on_AITaskSystem_task_succeeded"]

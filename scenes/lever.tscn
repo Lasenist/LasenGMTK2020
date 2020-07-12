@@ -74,18 +74,20 @@ extents = Vector2( 8, 4 )
 
 [sub_resource type="SpriteFrames" id=4]
 animations = [ {
-"frames": [ ExtResource( 2 ) ],
-"loop": true,
-"name": "off",
-"speed": 5.0
-}, {
 "frames": [ ExtResource( 1 ) ],
 "loop": true,
 "name": "on",
 "speed": 5.0
+}, {
+"frames": [ ExtResource( 2 ) ],
+"loop": true,
+"name": "off",
+"speed": 5.0
 } ]
 
-[node name="lever" type="Node2D"]
+[node name="lever" type="Node2D" groups=[
+"lever",
+]]
 script = SubResource( 1 )
 
 [node name="Area2D" type="Area2D" parent="." groups=[

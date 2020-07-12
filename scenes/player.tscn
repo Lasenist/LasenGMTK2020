@@ -33,9 +33,7 @@ var is_moving = false
 var is_jump_button_held = false
 var is_jumping = false
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
+onready var dialogue_box = $CanvasLayer/dialogue_box
 
 func _interact():
 	for thing in $interact_range.get_overlapping_areas():
@@ -99,23 +97,35 @@ func _physics_process(delta):
 	if is_jumping:
 		snap = Vector2()
 
-	if linear_velocity > Vector2.ZERO :
+	if linear_velocity.x > 0:
 		emit_signal(\"player_moved\")
 
 	move_and_slide_with_snap(linear_velocity, snap, Vector2.UP, true, 4, deg2rad(46))
+
+
+func _on_AITaskSystem_new_task_given(task : AITask):
+	dialogue_box.visible = true
+	dialogue_box.set_text(task.instructions)
+	dialogue_box.set_timer(task.length)
+
+func _on_AITaskSystem_task_failed():
+	dialogue_box.visible = false
+
+func _on_AITaskSystem_task_succeeded():
+	dialogue_box.visible = false
 "
 
-[sub_resource type="CapsuleShape2D" id=8]
+[sub_resource type="CapsuleShape2D" id=2]
 radius = 4.42091
 height = 1.34693
 
-[sub_resource type="RayShape2D" id=9]
+[sub_resource type="RayShape2D" id=3]
 length = 7.0
 
-[sub_resource type="CircleShape2D" id=10]
+[sub_resource type="CircleShape2D" id=4]
 radius = 16.0
 
-[sub_resource type="GDScript" id=7]
+[sub_resource type="GDScript" id=5]
 script/source = "extends NinePatchRect
 
 
@@ -152,19 +162,19 @@ texture = ExtResource( 1 )
 "player_body",
 ]]
 position = Vector2( 0.0561218, -0.646048 )
-shape = SubResource( 8 )
+shape = SubResource( 2 )
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="." groups=[
 "player_body",
 ]]
 position = Vector2( 0, 0.5 )
-shape = SubResource( 9 )
+shape = SubResource( 3 )
 
 [node name="interact_range" type="Area2D" parent="."]
 visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="interact_range"]
-shape = SubResource( 10 )
+shape = SubResource( 4 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
@@ -188,7 +198,7 @@ patch_margin_left = 2
 patch_margin_top = 2
 patch_margin_right = 2
 patch_margin_bottom = 2
-script = SubResource( 7 )
+script = SubResource( 5 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -211,3 +221,4 @@ margin_right = 100.0
 margin_bottom = 49.0
 
 [node name="dialogue_box" parent="CanvasLayer" instance=ExtResource( 5 )]
+visible = false

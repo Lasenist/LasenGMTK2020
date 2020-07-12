@@ -14,6 +14,9 @@ var current_task : AITask
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	
+	for stat in stat_names :
+		stat_values[stat] = 0
+	
 	for object in get_tree().get_nodes_in_group("lever") :
 		object.connect("flicked", self, "_on_lever_flicked")
 	
@@ -54,12 +57,11 @@ func _get_task_description(stat_name, count):
 		"player_jumped": return "I need to test the artificial gravity... Jump " + str(count) + " times"
 		"player_interacted": return "Could you fiddle around with some stuff..." + str(count) + " times"
 		"seen_player": return "Let me have a good look at you..."
-	
-	
 
 # We need to give a task
 func _on_task_give_timer_timeout():
-	pass # Replace with function body.
+	_generate_new_task()
+	print("Time for a new task!")
 
 # the current task has ended
 func _on_current_task_timer_timeout():
@@ -67,7 +69,8 @@ func _on_current_task_timer_timeout():
 	current_task = null
 
 func _add_count(stat_name):
-	stat_values[stat_name] += 1	
+	stat_values[stat_name] += 1
+	print(stat_name)
 	if current_task :
 		if current_task.stat == stat_name :
 			current_task.add_progress(1)

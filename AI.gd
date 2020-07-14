@@ -41,6 +41,8 @@ func _generate_new_task():
 	
 	if stat == "seen_player" :
 		random_count_number = 1
+	if stat == "player_moved" :
+		random_count_number = 60
 	
 	new_task.init(stat, random_count_number, random_length_number, _get_task_description(stat, random_count_number) )
 	current_task = new_task
@@ -69,7 +71,7 @@ func _on_current_task_timer_timeout():
 
 func _add_count(stat_name):
 	stat_values[stat_name] += 1
-	print(stat_name)
+
 	if current_task :
 		if current_task.stat == stat_name :
 			current_task.add_progress(1)
@@ -85,8 +87,7 @@ func _on_door_opened():
 	_add_count("door_opened")
 
 func _on_player_moved():
-	is_player_moving = true
-	$player_moving_timer.start()
+	_add_count("player_moved")
 
 func _on_player_jumped():
 	_add_count("player_jumped")
@@ -98,5 +99,4 @@ func _on_seen_player():
 	_add_count("seen_player")
 
 func _on_player_moving_timer_timeout():
-	_add_count("player_moved")
-	is_player_moving = false
+	pass

@@ -15,6 +15,7 @@ autostart = true
 one_shot = true
 
 [node name="player_moving_timer" type="Timer" parent="."]
+wait_time = 0.25
 one_shot = true
 __meta__ = {
 "_editor_description_": "How long the AI waits until it classes the player as stopped"

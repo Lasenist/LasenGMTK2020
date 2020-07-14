@@ -97,7 +97,7 @@ func _physics_process(delta):
 	if is_jumping:
 		snap = Vector2()
 
-	if linear_velocity.x > 0:
+	if abs(linear_velocity.x) > 0:
 		emit_signal(\"player_moved\")
 
 	move_and_slide_with_snap(linear_velocity, snap, Vector2.UP, true, 4, deg2rad(46))
@@ -156,6 +156,7 @@ func _process(delta):
 
 [node name="player" type="KinematicBody2D" groups=[
 "player",
+"player_body",
 ]]
 collision_mask = 2
 script = SubResource( 1 )

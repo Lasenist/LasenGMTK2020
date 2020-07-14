@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://assets/door_off.png" type="Texture" id=1]
 [ext_resource path="res://assets/door_on.png" type="Texture" id=2]
@@ -46,6 +46,11 @@ func _close():
 	is_open = false
 
 func _process(delta):
+	
+	if $doorpower.value <= 0 && is_on :
+		_turn_off()
+	elif $doorpower.value > 0 && !is_on :
+		_turn_on()
 	
 	if power_usage_cooldown >= 0:
 		power_usage_cooldown -= delta
@@ -154,6 +159,29 @@ func interact():
 [sub_resource type="RectangleShape2D" id=9]
 extents = Vector2( 6, 8 )
 
+[sub_resource type="GDScript" id=10]
+script/source = "extends Node
+
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+var value
+
+func set_display(value):
+	self.value = value
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+"
+
 [node name="door" type="StaticBody2D" groups=[
 "door",
 "doorpowerdisplay",
@@ -205,5 +233,10 @@ margin_left = -47.0
 margin_top = -3.0
 margin_right = 31.0
 margin_bottom = 9.0
+
+[node name="doorpower" type="Node" parent="." groups=[
+"doorpowerdisplay",
+]]
+script = SubResource( 10 )
 [connection signal="body_entered" from="open_area" to="." method="_on_open_area_body_entered"]
 [connection signal="interacted" from="interact_area" to="." method="_on_interact_area_interacted"]

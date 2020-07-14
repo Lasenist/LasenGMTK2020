@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Timer
@@ -38,7 +38,10 @@ func _process(delta):
 		var radar_value = $radar_value.value
 		if radar_value > 0 :
 			resource_amount_to_take = REDUCE_RESOURCE_A_SECOND * 2
-			
+		
+		if $defence.value == 100 :
+			resource_amount_to_take *= 2
+		
 		emit_signal(\"reduce_resource\", reduce_resource_name, resource_amount_to_take)
 		is_powered_to_reduce_resource = false
 
@@ -69,6 +72,29 @@ func set_display(value) :
 #	pass
 "
 
+[sub_resource type="GDScript" id=3]
+script/source = "extends Node
+
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+
+var value = 0
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+func set_display(value):
+	self.value = value
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+"
+
 [node name="defence_guns_shooting" type="Timer" groups=[
 "enemiesdisplay",
 "reduce_resource",
@@ -85,4 +111,9 @@ is_on = true
 "radardisplay",
 ]]
 script = SubResource( 2 )
+
+[node name="defence" type="Node" parent="." groups=[
+"defencedisplay",
+]]
+script = SubResource( 3 )
 [connection signal="timeout" from="." to="." method="_on_take_timer_timeout"]

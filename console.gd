@@ -12,6 +12,7 @@ export var RESOURCE_A_SECOND = 5.0
 export var give_resource_name = "power"
 
 var progress = 0
+var is_on
 
 onready var progress_bar = $progress_bar
 
